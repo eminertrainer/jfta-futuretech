@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JFTA Admin Selection Dashboard</title>
+<style>
+:root{--navy:#17324d;--bg:#f4f6f8;--card:#fff;--line:#dce2e8;--text:#25313c;--muted:#6b7785}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
+header{background:var(--navy);color:white;padding:18px 24px}header h1{margin:0;font-size:22px}header p{margin:5px 0 0;opacity:.82;font-size:13px}
+main{max-width:1280px;margin:auto;padding:20px}.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px}
+.card{background:white;border:1px solid var(--line);border-radius:12px;padding:14px}.stat .n{font-size:26px;font-weight:700;color:var(--navy)}.stat .l{font-size:12px;color:var(--muted)}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}.toolbar input,.toolbar select,select,textarea{padding:9px;border:1px solid var(--line);border-radius:8px;background:white}
+button{border:0;border-radius:8px;padding:9px 12px;cursor:pointer}.primary{background:var(--navy);color:white}.secondary{background:#eaf0f5;color:var(--navy)}
+table{width:100%;border-collapse:collapse;background:white}th,td{padding:10px 9px;border-bottom:1px solid var(--line);font-size:13px;text-align:left;vertical-align:top}
+th{background:#eef2f5;color:var(--navy);font-size:12px;position:sticky;top:0}tr:hover{background:#fafcfd}
+.badge{display:inline-block;padding:4px 7px;border-radius:999px;font-size:11px;background:#eef2f5}.Beginner{background:#edf5ff}.Developing{background:#fff5d9}.Experienced{background:#e7f7ef}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 410px;gap:16px;align-items:start}.panel{position:sticky;top:14px}.hidden{display:none}
+.panel h2{margin:0 0 4px;font-size:18px;color:var(--navy)}.meta,.small{font-size:12px;color:var(--muted)}
+.section{border-top:1px solid var(--line);padding-top:12px;margin-top:12px}.section h3{font-size:13px;margin:0 0 8px;color:var(--navy)}
+.answer{background:#f8fafb;border:1px solid var(--line);border-radius:8px;padding:9px;margin:5px 0 9px;font-size:13px;white-space:pre-wrap}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.score-row{display:grid;grid-template-columns:1fr 95px;gap:8px;align-items:center;margin-bottom:8px}.score-row select,.section select,.section textarea{width:100%}
+textarea{min-height:90px;resize:vertical}.total{font-size:18px;font-weight:700;color:var(--navy)}
+.notice{padding:10px 12px;border-radius:8px;background:#fff7dc;color:#6f5600;font-size:12px;margin-bottom:12px}
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}.panel{position:static}}
+</style>
+</head>
+<body>
+<header><h1>Jitra Future Tech Academy</h1><p>Admin Selection Dashboard • Pemilihan 20 peserta</p></header>
+<main>
+<div class="notice">Skor diberikan secara manual. Word/Excel/AI/Coding ialah baseline dan tidak menambah markah pemilihan.</div>
+<section class="stats">
+<div class="card stat"><div class="n" id="sTotal">0</div><div class="l">Jumlah Permohonan</div></div>
+<div class="card stat"><div class="n" id="sShortlist">0</div><div class="l">Shortlist</div></div>
+<div class="card stat"><div class="n" id="sSelected">0</div><div class="l">Dipilih</div></div>
+<div class="card stat"><div class="n" id="sReserve">0</div><div class="l">Simpanan</div></div>
+<div class="card stat"><div class="n" id="sUnreviewed">0</div><div class="l">Belum Dinilai</div></div>
+</section>
+<div class="toolbar">
+<input id="q" placeholder="Cari nama / ID / sekolah">
+<select id="schoolFilter"><option value="">Semua sekolah</option></select>
+<select id="levelFilter"><option value="">Semua tahap digital</option><option>Beginner</option><option>Developing</option><option>Experienced</option></select>
+<select id="statusFilter"><option value="">Semua status</option><option>Belum Dinilai</option><option>Shortlist</option><option>Dipilih</option><option>Simpanan</option><option>Tidak Dipilih</option></select>
+<button class="secondary" onclick="loadData()">Refresh</button><button class="primary" onclick="exportCSV()">Export CSV</button>
+</div>
+<div class="layout">
+<div style="overflow:auto;max-height:70vh;border-radius:12px"><table><thead><tr><th>ID</th><th>Nama</th><th>Sekolah</th><th>Baseline</th><th>Skor</th><th>Status</th></tr></thead><tbody id="rows"></tbody></table></div>
+<aside id="panel" class="card panel hidden">
+<h2 id="pName"></h2><div class="meta" id="pMeta"></div>
+<div class="section"><h3>Baseline Digital</h3><div class="grid2" id="baseline"></div></div>
+<div class="section"><h3>Jawapan Calon</h3><div class="small">Kenapa mahu sertai?</div><div class="answer" id="pSebab"></div><div class="small">Teknologi yang ingin dipelajari</div><div class="answer" id="pTech"></div><div class="small">Apa akan dilakukan bila sukar?</div><div class="answer" id="pSukar"></div></div>
+<div class="section"><h3>Penilaian Manual</h3>
+<div class="score-row"><label>Minat & motivasi (0–4)</label><select id="scoreMot"><option value="0">0</option><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
+<div class="score-row"><label>Minat teknologi (0–2)</label><select id="scoreTech"><option value="0">0</option><option>1</option><option>2</option></select></div>
+<div class="score-row"><label>Sikap bila sukar (0–4)</label><select id="scoreRes"><option value="0">0</option><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
+<div class="total">Jumlah: <span id="scoreTotal">0</span>/10</div></div>
+<div class="section"><h3>Status</h3><select id="pStatus"><option>Belum Dinilai</option><option>Shortlist</option><option>Dipilih</option><option>Simpanan</option><option>Tidak Dipilih</option></select></div>
+<div class="section"><h3>Catatan Penilai</h3><textarea id="pNotes" placeholder="Contoh: Motivasi baik, beginner; pertimbangkan representasi sekolah..."></textarea></div>
+<div class="section"><button class="primary" style="width:100%" onclick="saveEvaluation()">Simpan Penilaian</button><div id="saveMsg" class="small" style="margin-top:8px"></div></div>
+</aside></div></main>
+<script>
+let data=[],current=null;
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
+function digitalLevel(a){const vals=[a.word,a.excel,a.ai,a.coding].map(v=>(v||'').toLowerCase());let p=0;vals.forEach(v=>{if(v.includes('ya')||v.includes('mahir')||v.includes('pernah'))p+=2;else if(v.includes('sedikit'))p+=1});return p<=2?'Beginner':p<=5?'Developing':'Experienced'}
+function score(a){return Number(a.score_motivasi||0)+Number(a.score_teknologi||0)+Number(a.score_kesukaran||0)}
+async function loadData(){const r=await fetch('/api/admin/applications');if(!r.ok){alert('Gagal memuatkan data admin.');return}data=await r.json();buildSchools();render();updateStats()}
+function buildSchools(){const e=document.getElementById('schoolFilter'),cur=e.value,schools=[...new Set(data.map(x=>x.sekolah).filter(Boolean))].sort();e.innerHTML='<option value="">Semua sekolah</option>'+schools.map(s=>'<option>'+esc(s)+'</option>').join('');e.value=cur}
+function updateStats(){const c=s=>data.filter(x=>(x.status||'Belum Dinilai')===s).length;sTotal.textContent=data.length;sShortlist.textContent=c('Shortlist');sSelected.textContent=c('Dipilih');sReserve.textContent=c('Simpanan');sUnreviewed.textContent=c('Belum Dinilai')}
+function render(){const qv=q.value.toLowerCase().trim(),sf=schoolFilter.value,lf=levelFilter.value,st=statusFilter.value;const list=data.filter(a=>{const h=(a.candidate_id+' '+a.nama+' '+a.sekolah).toLowerCase();return(!qv||h.includes(qv))&&(!sf||a.sekolah===sf)&&(!lf||digitalLevel(a)===lf)&&(!st||(a.status||'Belum Dinilai')===st)});rows.innerHTML=list.map(a=>'<tr data-id="'+esc(a.candidate_id)+'"><td>'+esc(a.candidate_id)+'</td><td><b>'+esc(a.nama)+'</b></td><td>'+esc(a.sekolah)+'</td><td><span class="badge '+digitalLevel(a)+'">'+digitalLevel(a)+'</span></td><td>'+score(a)+'/10</td><td><b>'+esc(a.status||'Belum Dinilai')+'</b></td></tr>').join('');rows.querySelectorAll('tr').forEach(tr=>tr.onclick=()=>openCandidate(tr.dataset.id))}
+function openCandidate(id){current=data.find(x=>x.candidate_id===id);if(!current)return;panel.classList.remove('hidden');pName.textContent=current.nama;pMeta.textContent=current.candidate_id+' • '+current.sekolah+' • '+(current.jantina||'')+' • '+(current.telefon_penjaga||'Tiada telefon');baseline.innerHTML=['word','excel','ai','coding'].map(k=>'<div class="answer"><b>'+k.toUpperCase()+'</b><br>'+esc(current[k]||'Tidak dinyatakan')+'</div>').join('');pSebab.textContent=current.sebab||'';pTech.textContent=current.teknologi||'';pSukar.textContent=current.bila_sukar||'';scoreMot.value=current.score_motivasi||0;scoreTech.value=current.score_teknologi||0;scoreRes.value=current.score_kesukaran||0;pStatus.value=current.status||'Belum Dinilai';pNotes.value=current.catatan||'';calcTotal();saveMsg.textContent=''}
+function calcTotal(){scoreTotal.textContent=Number(scoreMot.value)+Number(scoreTech.value)+Number(scoreRes.value)}
+[scoreMot,scoreTech,scoreRes].forEach(x=>x.addEventListener('change',calcTotal));[q,schoolFilter,levelFilter,statusFilter].forEach(x=>x.addEventListener('input',render));
+async function saveEvaluation(){if(!current)return;saveMsg.textContent='Menyimpan...';const payload={candidate_id:current.candidate_id,score_motivasi:Number(scoreMot.value),score_teknologi:Number(scoreTech.value),score_kesukaran:Number(scoreRes.value),status:pStatus.value,catatan:pNotes.value};const r=await fetch('/api/admin/evaluation',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});const out=await r.json().catch(()=>({}));if(!r.ok){saveMsg.textContent=out.error||'Gagal menyimpan.';return}saveMsg.textContent='Penilaian disimpan.';await loadData();openCandidate(payload.candidate_id)}
+function exportCSV(){location.href='/api/admin/export'}loadData();
+</script></body></html>
