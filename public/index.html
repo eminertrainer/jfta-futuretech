@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ms">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#17324D" />
+  <title>Jitra Future Tech Academy | Permohonan</title>
+  <style>
+    :root{--navy:#17324D;--blue:#1F6FEB;--ink:#243746;--muted:#6B7785;--line:#D8DEE6;--bg:#F4F7FA;--white:#fff;--accent:#F3C640}
+    *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+    .wrap{max-width:860px;margin:auto;padding:18px}.hero{background:var(--navy);border-radius:18px;overflow:hidden;box-shadow:0 8px 28px rgba(23,50,77,.14)}
+    .hero img{display:block;width:100%;max-height:340px;object-fit:cover}.heroText{padding:20px 22px;color:white}.heroText h1{margin:0 0 6px;font-size:clamp(24px,4vw,38px)}
+    .heroText p{margin:0;color:#dce7f2}.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;margin-top:16px;box-shadow:0 4px 18px rgba(30,50,70,.06)}
+    h2{font-size:20px;color:var(--navy);margin:0 0 14px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.full{grid-column:1/-1}
+    label{display:block;font-weight:650;font-size:14px;margin-bottom:6px} input,select,textarea{width:100%;border:1px solid #cfd7df;border-radius:10px;padding:11px 12px;font-size:15px;background:#fff}
+    textarea{min-height:92px;resize:vertical}.choices{display:flex;gap:12px;flex-wrap:wrap}.choice{display:flex;align-items:center;gap:7px;font-weight:500}.choice input{width:auto}
+    .note{font-size:13px;color:var(--muted);line-height:1.45}.privacy{background:#f8fafc;border-left:4px solid var(--navy);padding:11px 13px;border-radius:8px}
+    button{width:100%;border:0;background:var(--navy);color:#fff;font-weight:750;font-size:16px;padding:14px;border-radius:11px;cursor:pointer}
+    button:hover{background:#102a43} button:disabled{opacity:.55;cursor:not-allowed}.status{display:none;margin-top:14px;padding:12px;border-radius:10px;font-weight:650}
+    .ok{display:block;background:#e9f7ef;color:#146c43}.err{display:block;background:#fff1f0;color:#a61b1b}.candidate{font-size:13px;color:var(--muted);margin-top:6px}
+    footer{text-align:center;color:var(--muted);font-size:12px;padding:22px 10px 10px}@media(max-width:680px){.grid{grid-template-columns:1fr}.hero img{max-height:240px}.card{padding:17px}.wrap{padding:10px}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <img src="poster.png" alt="Jitra Future Tech Academy - Jitra Didik" />
+    <div class="heroText"><h1>Permohonan Peserta</h1><p>Tingkatan 1 | Jitra Future Tech Academy 2026</p></div>
+  </section>
+
+  <form id="form" class="card">
+    <h2>Maklumat Pelajar</h2>
+    <div class="grid">
+      <div class="full"><label for="nama">Nama penuh *</label><input id="nama" name="nama" required autocomplete="name" /></div>
+      <div><label for="jantina">Jantina *</label><select id="jantina" name="jantina" required><option value="">Pilih</option><option>Lelaki</option><option>Perempuan</option></select></div>
+      <div><label for="sekolah">Sekolah *</label><input id="sekolah" name="sekolah" required /></div>
+      <div><label for="komputer_rumah">Akses komputer di rumah?</label><select id="komputer_rumah" name="komputer_rumah"><option>Ya, selalu</option><option>Kadang-kadang / berkongsi</option><option>Tiada</option></select></div>
+      <div><label for="telefon_penjaga">Telefon penjaga (opsyenal)</label><input id="telefon_penjaga" name="telefon_penjaga" inputmode="tel" /></div>
+    </div>
+
+    <h2 style="margin-top:24px">Pengalaman Digital</h2>
+    <p class="note">Tidak pernah guna pun tidak mengapa. Ini bukan ujian siapa paling pandai.</p>
+    <div class="choices">
+      <label class="choice"><input type="checkbox" name="word" value="Ya"> Word</label>
+      <label class="choice"><input type="checkbox" name="excel" value="Ya"> Excel</label>
+      <label class="choice"><input type="checkbox" name="ai" value="Ya"> AI tools</label>
+      <label class="choice"><input type="checkbox" name="coding" value="Ya"> Coding</label>
+    </div>
+
+    <h2 style="margin-top:24px">Tentang Anda</h2>
+    <div class="grid">
+      <div class="full"><label for="sebab">Kenapa anda mahu sertai program ini? *</label><textarea id="sebab" name="sebab" required maxlength="500"></textarea></div>
+      <div class="full"><label for="teknologi">Teknologi apa yang paling anda ingin belajar? *</label><textarea id="teknologi" name="teknologi" required maxlength="350"></textarea></div>
+      <div class="full"><label for="bila_sukar">Jika sesuatu aktiviti susah, apa yang anda akan buat? *</label><textarea id="bila_sukar" name="bila_sukar" required maxlength="350"></textarea></div>
+    </div>
+
+    <input type="hidden" name="candidate_id" id="candidate_id" />
+    <div class="privacy note" style="margin-top:18px">Maklumat ini digunakan hanya untuk pemilihan peserta dan urusan program Jitra Future Tech Academy. Data tidak digunakan untuk tujuan komersial.</div>
+    <label class="choice" style="margin:14px 0"><input type="checkbox" name="persetujuan" value="Setuju" required> Saya bersetuju maklumat ini digunakan untuk tujuan program.</label>
+    <button id="submitBtn" type="submit">Hantar Permohonan</button>
+    <div id="candidateText" class="candidate"></div>
+    <div id="status" class="status"></div>
+  </form>
+  <footer>Jitra Future Tech Academy | Jitra Didik</footer>
+</div>
+<script>
+(function(){
+  const form=document.getElementById('form');
+  const status=document.getElementById('status');
+  const btn=document.getElementById('submitBtn');
+  const makeId=()=> 'JFTA-'+new Date().toISOString().slice(2,10).replace(/-/g,'')+'-'+Math.random().toString(36).slice(2,6).toUpperCase();
+  let cid=makeId();
+  const setId=()=>{document.getElementById('candidate_id').value=cid; document.getElementById('candidateText').textContent='ID calon: '+cid;};
+  setId();
+  form.addEventListener('submit', async function(e){
+    e.preventDefault();
+    btn.disabled=true; btn.textContent='Menghantar...'; status.className='status'; status.textContent='';
+    try{
+      const fd=new FormData(form);
+      const payload=Object.fromEntries(fd.entries());
+      payload.word=fd.has('word')?'Ya':'Tidak';
+      payload.excel=fd.has('excel')?'Ya':'Tidak';
+      payload.ai=fd.has('ai')?'Ya':'Tidak';
+      payload.coding=fd.has('coding')?'Ya':'Tidak';
+      const r=await fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+      const data=await r.json();
+      if(!r.ok || !data.ok) throw new Error(data.error||'Gagal menghantar borang.');
+      status.className='status ok';
+      status.textContent='Permohonan telah dihantar. Terima kasih! Sila simpan ID calon anda: '+cid;
+      form.reset();
+      cid=makeId(); setId();
+      btn.disabled=false; btn.textContent='Hantar Permohonan';
+    }catch(err){
+      status.className='status err'; status.textContent=err.message||'Ralat penghantaran. Cuba semula.';
+      btn.disabled=false; btn.textContent='Cuba Semula';
+    }
+  });
+})();
+</script>
+</body>
+</html>
