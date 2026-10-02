@@ -26,11 +26,22 @@ export async function onRequestPost(context) {
     ).run();
 
     return Response.json({ ok:true, candidate_id:data.candidate_id });
-  } catch (e) {
+    } catch (e) {
     const msg = String(e?.message || e);
+
+    console.error('REGISTER ERROR:', msg);
+    console.error(e);
+
     if (msg.includes('UNIQUE constraint failed')) {
-      return Response.json({ ok:false, error:'ID calon ini telah dihantar. Sila muat semula halaman.' }, { status:409 });
+      return Response.json(
+        { ok:false, error:'ID calon ini telah dihantar. Sila muat semula halaman.' },
+        { status:409 }
+      );
     }
-    return Response.json({ ok:false, error:'Ralat pangkalan data. Sila cuba semula.' }, { status:500 });
+
+    return Response.json(
+      { ok:false, error:'Ralat pangkalan data. Sila cuba semula.' },
+      { status:500 }
+    );
   }
 }
